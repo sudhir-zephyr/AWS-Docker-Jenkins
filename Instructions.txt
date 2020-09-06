@@ -1,0 +1,78 @@
+********************************************************************************
+*********************************DESCRIPTION************************************
+********************************************************************************
+The instruction in the document help you create AWS resources such as VPC,IGW,
+Public and Private Subnet, Route Tables, KeyPair and EC2 instance.
+
+Bootstrap the EC2 instance with updates, docker and docker-compose install, pull
+docker image and create container
+
+********************************************************************************
+**********************************REQUIREMENTS**********************************
+********************************************************************************
+1. On the linux system, do the following.
+2. To store AWS access id and key, option 2 is secure waty of doing things. If option 2 doesnt work, go with option1
+
+		Option (1) Install AWS CLI <INSTRUCTIONS>
+		Enter 'aws configure' and key in the AWS access id and key which gets stored in user\.aws\credentials
+
+		Option (2) Install AWS Vault
+		Instructions: https://www.qualimente.com/2018/10/22/how-to-use-aws-vault-to-managing-credentials-for-an-aws-account/
+
+		Install AWS-Vault to securely store AWS access id and key in the secure keystore and generate temporary credentials to access AWS resources
+		Note: get the latest download link from here https://github.com/99designs/aws-vault
+		curl -L https://github.com/99designs/aws-vault/releases/download/v5.4.4/aws-vault-linux-amd64 > /usr/local/bin/aws-vault
+		chmod +x /usr/local/bin/aws-vault
+		aws-vault --version
+
+		Add AWS access id, key and passphrase in aws-vault for security so that its not stores as plain text
+		aws-vault add <userprofile>
+		key in aws access id, key and passphrase
+
+		Run commands 
+		aws-vault exec ec2-user-- aws s3 ls
+		Note: It will prompt for a passphrase
+
+		aws-vault list
+		aws-vault exec ec2-user -- env | grep AWS
+
+3. Create ssh key using keygen for EC2 instance
+		Generating public/private rsa key pair.
+		Enter file in which to save the key (/home/jenkins/.ssh/id_rsa): aws_rsa
+		Enter passphrase (empty for no passphrase):
+		Enter same passphrase again:
+		Your identification has been saved in aws_rsa.
+		Your public key has been saved in aws_rsa.pub.
+
+4. Install Git <INSTRUCTIONS>
+5. Install Terraform <INSTRUCTIONS>
+
+********************************************************************************
+**********************************TERRAFORM*************************************
+********************************************************************************
+
+Create terraform directory in home directory
+mkdir terraform
+
+Clone the git repository <INSTRUCTIONS>
+
+The script creates the following resources 
+VPC, IGW, 1 Public and Private Subnet and route tables
+CIDR range
+vpc_cidr             = "10.123.0.0/16"
+public_subnet_cidrs  = "10.123.1.0/24"
+private_subnet_cidrs = "10.123.2.0/24"
+
+EC2 
+Key Pair
+Security groups with ingress 22 and 8080 and egress (ALL)
+Install docker and docker-compose
+Copied docker-compose.yml file local to EC2 instance
+Pulls the jenkins image and creates a jenkins container
+
+
+********************************************************************************
+*************************IMPROVEMENTS NEEDED************************************
+********************************************************************************
+1. Create S3 bucket for storing tfstate file and avoid chicken/egg situation
+

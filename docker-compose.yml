@@ -1,0 +1,14 @@
+version: '3'
+services:
+  jenkins:
+    container_name: jenkins
+    image: jenkins/jenkins
+    user: root
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/home/ec2-user/jenkins_data/jenkins_home:/var/jenkins_home"
+    networks:
+      - net
+networks:
+  net:
